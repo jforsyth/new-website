@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://jforsyth.github.io/new-website/sitemap.xml
