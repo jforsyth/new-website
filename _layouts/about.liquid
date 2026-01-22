@@ -5,7 +5,7 @@ layout: default
   <header class="post-header">
     <h1 class="post-title">
       {% if site.title == 'blank' %}
-        <span class="font-weight-bold">{{ site.first_name }}</span> {{ site.middle_name }}
+        {{ site.first_name }} {{ site.middle_name }}
         {{ site.last_name }}
       {% else %}
         {{ site.title }}
@@ -51,9 +51,12 @@ layout: default
     <!-- Latest posts -->
     {% if page.latest_posts and page.latest_posts.enabled %}
       <h2>
-        <a href="{{ '/blog/' | relative_url }}" style="color: inherit">latest posts</a>
+        <a href="{{ '/blog/' | relative_url }}" style="color: inherit">news and updates</a>
       </h2>
       {% include latest_posts.liquid %}
+      <div class="text-center mt-3">
+        <a class="btn btn-outline-primary btn-sm" href="{{ '/blog/' | relative_url }}" role="button">view all posts</a>
+      </div>
     {% endif %}
 
     <!-- Selected papers -->
