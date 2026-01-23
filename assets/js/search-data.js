@@ -7,21 +7,21 @@ ninja.data = [{
     title: "about",
     section: "Navigation",
     handler: () => {
-      window.location.href = "/new-website/";
+      window.location.href = "/";
     },
   },{id: "nav-news",
           title: "news",
           description: "",
           section: "Navigation",
           handler: () => {
-            window.location.href = "/new-website/blog/";
+            window.location.href = "/blog/";
           },
         },{id: "nav-publications",
           title: "publications",
           description: "publications by categories in reversed chronological order",
           section: "Navigation",
           handler: () => {
-            window.location.href = "/new-website/publications/";
+            window.location.href = "/publications/";
           },
         },{id: "post-x-ray-imaging-to-identify-ancient-fakes",
         
@@ -64,7 +64,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/new-website/blog/2024/tenure/";
+            window.location.href = "/blog/2024/tenure/";
           
         },
       },{id: "post-megan-caulfield-julia-larson-and-abby-ensogna-present-at-capwic-and-sieds-2024",
@@ -86,7 +86,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/new-website/blog/2023/ancientcoins/";
+            window.location.href = "/blog/2023/ancientcoins/";
           
         },
       },{id: "post-papers-at-sieds-2023-and-icat-day-panelist",
@@ -97,7 +97,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/new-website/blog/2023/sieds2023/";
+            window.location.href = "/blog/2023/sieds2023/";
           
         },
       },{id: "post-megan-caulfield-and-justin-blevins-present-at-ncur-2023",
@@ -119,7 +119,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/new-website/blog/2022/fall2022-update/";
+            window.location.href = "/blog/2022/fall2022-update/";
           
         },
       },{id: "post-new-research-students-additional-grants-awarded",
@@ -141,7 +141,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/new-website/blog/2021/promotion/";
+            window.location.href = "/blog/2021/promotion/";
           
         },
       },{id: "post-stephen-mitchell-sophia-cronin-tyler-webster-and-jonathan-li-present-at-ieee-southeast-and-capwic-2021",
@@ -174,7 +174,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/new-website/blog/2019/asee2019/";
+            window.location.href = "/blog/2019/asee2019/";
           
         },
       },{id: "post-sanarea-ali-presents-at-acm-capwic-2019",
@@ -196,7 +196,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/new-website/blog/2018/joinJMU/";
+            window.location.href = "/blog/2018/joinJMU/";
           
         },
       },{id: "post-publications-at-asee-2018",
@@ -207,7 +207,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/new-website/blog/2018/asee2018/";
+            window.location.href = "/blog/2018/asee2018/";
           
         },
       },{id: "post-great-to-greater-grant-awarded",
@@ -218,24 +218,24 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/new-website/blog/2016/GreatToGreater/";
+            window.location.href = "/blog/2016/GreatToGreater/";
           
         },
       },{id: "books-the-godfather",
           title: 'The Godfather',
           description: "",
           section: "Books",handler: () => {
-              window.location.href = "/new-website/books/the_godfather/";
+              window.location.href = "/books/the_godfather/";
             },},{id: "teachings-data-science-fundamentals",
           title: 'Data Science Fundamentals',
           description: "This course covers the foundational aspects of data science, including data collection, cleaning, analysis, and visualization. Students will learn practical skills for working with real-world datasets.",
           section: "Teachings",handler: () => {
-              window.location.href = "/new-website/teachings/data-science-fundamentals/";
+              window.location.href = "/teachings/data-science-fundamentals/";
             },},{id: "teachings-introduction-to-machine-learning",
           title: 'Introduction to Machine Learning',
           description: "This course provides an introduction to machine learning concepts, algorithms, and applications. Students will learn about supervised and unsupervised learning, model evaluation, and practical implementations.",
           section: "Teachings",handler: () => {
-              window.location.href = "/new-website/teachings/introduction-to-machine-learning/";
+              window.location.href = "/teachings/introduction-to-machine-learning/";
             },},{
       id: 'light-theme',
       title: 'Change theme to light',
