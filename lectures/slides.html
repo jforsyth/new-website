@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to C++ for Embedded Systems</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .slide {
+            display: none;
+            position: absolute;
+            width: 90vw;
+            max-width: 1400px;
+            height: 85vh;
+            background: white;
+            border-radius: 8px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .title-slide.active {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: clamp(1.8em, 5vw, 3em);
+            margin-bottom: 20px;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: clamp(1.5em, 4vw, 2.2em);
+            margin-bottom: 25px;
+            margin-top: 20px;
+        }
+
+        h3 {
+            color: #555;
+            font-size: clamp(1.1em, 3vw, 1.5em);
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        p, li {
+            font-size: clamp(1em, 2.5vw, 1.3em);
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: clamp(0.85em, 2vw, 1.1em);
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            color: #f8f8f2;
+            padding: 0;
+            font-size: 1em;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: clamp(0.9em, 2vw, 1.1em);
+            border: none;
+            background: white;
+            color: #667eea;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        button:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-size: clamp(0.9em, 2vw, 1em);
+        }
+
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: clamp(2em, 7vw, 4em);
+            border: none;
+        }
+
+        .title-slide p {
+            font-size: clamp(1em, 3vw, 1.5em);
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 5px solid #ffc107;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: clamp(0.85em, 2vw, 1em);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        /* Interactive Code Editor Styles */
+        .code-practice {
+            margin: 20px 0;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .code-practice-header {
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+            font-weight: bold;
+            font-size: clamp(0.9em, 2vw, 1.1em);
+        }
+
+        .code-practice-body {
+            padding: 15px;
+            background: #f9f9f9;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.85em, 2vw, 1em);
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            resize: vertical;
+        }
+
+        .code-output {
+            margin-top: 10px;
+            padding: 15px;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.85em, 2vw, 1em);
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .run-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: clamp(0.9em, 2vw, 1em);
+        }
+
+        .run-button:hover {
+            background: #218838;
+        }
+
+        .run-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .error {
+            color: #ff6b6b;
+        }
+
+        .success {
+            color: #51cf66;
+        }
+
+        .warning {
+            color: #ffa94d;
+        }
+
+        .compiler-error {
+            color: #ff6b6b;
+            background: #ffe0e0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .loading {
+            color: #ffa94d;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+                height: calc(100vh - 120px);
+            }
+
+            ul {
+                margin-left: 20px;
+            }
+
+            .controls {
+                gap: 10px;
+            }
+
+            button {
+                padding: 10px 20px;
+            }
+
+            table {
+                font-size: 0.8em;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide {
+                padding: 15px;
+            }
+
+            .slide-number {
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-number" id="slideNumber">1 / 27</div>
+    
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <h1>Introduction to C++</h1>
+            <h2>ENGR 445: Embedded System Design</h2>
+            <p>Generated by Claude.Ai with helpful prompting from Dr. Forsyth</p>
+        </div>
+
+        <!-- Slide 2: What is C++? -->
+        <div class="slide">
+            <h1>What is C++?</h1>
+            <p>C++ is a powerful programming language widely used in embedded systems.</p>
+            <h3>Why C++ for Embedded Systems?</h3>
+            <ul>
+                <li><strong>Efficient:</strong> Direct hardware access and minimal overhead</li>
+                <li><strong>Control:</strong> Fine-grained control over system resources</li>
+                <li><strong>Industry Standard:</strong> Used in automotive, aerospace, IoT devices</li>
+            </ul>
+            <div class="highlight">
+                <strong>Key Point:</strong> C++ gives you the power to control hardware directly while providing tools to organize your code effectively.
+            </div>
+        </div>
+
+        <!-- Slide 3: Data Types -->
+        <div class="slide">
+            <h1>Data Types</h1>
+            <p>Variables store data. Each variable has a <strong>type</strong> that determines what kind of data it can hold.</p>
+            
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Example Values</th>
+                    <th>Typical Size</th>
+                </tr>
+                <tr>
+                    <td><code>int</code></td>
+                    <td>Integer numbers</td>
+                    <td>-10, 0, 42</td>
+                    <td>4 bytes</td>
+                </tr>
+                <tr>
+                    <td><code>long</code></td>
+                    <td>Larger integers</td>
+                    <td>-1000000, 2147483647</td>
+                    <td>4-8 bytes*</td>
+                </tr>
+                <tr>
+                    <td><code>unsigned int</code></td>
+                    <td>Non-negative integers</td>
+                    <td>0, 42, 65535</td>
+                    <td>4 bytes</td>
+                </tr>
+                <tr>
+                    <td><code>float</code></td>
+                    <td>Single precision</td>
+                    <td>3.14, -0.5</td>
+                    <td>4 bytes</td>
+                </tr>
+                <tr>
+                    <td><code>double</code></td>
+                    <td>Double precision</td>
+                    <td>3.14159265</td>
+                    <td>8 bytes</td>
+                </tr>
+                <tr>
+                    <td><code>char</code></td>
+                    <td>Single character</td>
+                    <td>'A', 'x'</td>
+                    <td>1 byte</td>
+                </tr>
+                <tr>
+                    <td><code>bool</code></td>
+                    <td>True or false</td>
+                    <td>true, false</td>
+                    <td>1 byte</td>
+                </tr>
+            </table>
+            <div class="highlight">
+                <strong>Important:</strong> *Size can vary by system! Always check your platform's documentation for embedded systems.
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Declare Different Data Types</div>
+                <div class="code-practice-body">
+                    <p>Declare variables of different types and print their values:</p>
+                    <textarea class="code-editor" id="editor_types">#include <iostream>
+using namespace std;
+
+int main() {
+    int age = 25;
+    float temperature = 36.5;
+    char initial = 'J';
+    bool isActive = true;
+    
+    cout << "Age: " << age << endl;
+    cout << "Temperature: " << temperature << endl;
+    cout << "Initial: " << initial << endl;
+    cout << "Active: " << isActive << endl;
+    
+    // Try declaring your own variables here!
+    
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_types')">▶ Run Code</button>
+                    <div class="code-output" id="output_types">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Fixed-Width Integer Types -->
+        <div class="slide">
+            <h1>Fixed-Width Integer Types (stdint.h)</h1>
+            <p>For embedded systems, we need <strong>guaranteed</strong> sizes. Use <code>#include &lt;stdint.h&gt;</code></p>
+            
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Range</th>
+                    <th>Guaranteed Size</th>
+                </tr>
+                <tr>
+                    <td><code>uint8_t</code></td>
+                    <td>Unsigned 8-bit integer</td>
+                    <td>0 to 255</td>
+                    <td>1 byte</td>
+                </tr>
+                <tr>
+                    <td><code>int8_t</code></td>
+                    <td>Signed 8-bit integer</td>
+                    <td>-128 to 127</td>
+                    <td>1 byte</td>
+                </tr>
+                <tr>
+                    <td><code>uint16_t</code></td>
+                    <td>Unsigned 16-bit integer</td>
+                    <td>0 to 65,535</td>
+                    <td>2 bytes</td>
+                </tr>
+                <tr>
+                    <td><code>int16_t</code></td>
+                    <td>Signed 16-bit integer</td>
+                    <td>-32,768 to 32,767</td>
+                    <td>2 bytes</td>
+                </tr>
+                <tr>
+                    <td><code>uint32_t</code></td>
+                    <td>Unsigned 32-bit integer</td>
+                    <td>0 to 4,294,967,295</td>
+                    <td>4 bytes</td>
+                </tr>
+                <tr>
+                    <td><code>int32_t</code></td>
+                    <td>Signed 32-bit integer</td>
+                    <td>-2,147,483,648 to 2,147,483,647</td>
+                    <td>4 bytes</td>
+                </tr>
+            </table>
+            
+            <h3>Example:</h3>
+            <pre><code>#include &lt;stdint.h&gt;
+
+uint8_t sensorReading = 250;    // Exactly 1 byte
+int16_t temperature = -40;      // Exactly 2 bytes
+uint32_t timestamp = 1000000;   // Exactly 4 bytes</code></pre>
+            
+            <div class="highlight">
+                <strong>Best Practice:</strong> Use these types in embedded systems for consistent behavior across platforms!
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Fixed-Width Types</div>
+                <div class="code-practice-body">
+                    <p>Experiment with guaranteed-size integer types:</p>
+                    <textarea class="code-editor" id="editor_stdint">#include <iostream>
+#include <stdint.h>
+using namespace std;
+
+int main() {
+    uint8_t sensorReading = 255;    // Max value for 8-bit unsigned
+    int16_t temperature = -40;       // Can be negative
+    uint32_t timestamp = 1000000;    // Large positive value
+    
+    cout << "Sensor: " << (int)sensorReading << endl;  // Cast to int to print
+    cout << "Temp: " << temperature << endl;
+    cout << "Timestamp: " << timestamp << endl;
+    
+    // Try adding values together
+    uint16_t sum = sensorReading + 100;
+    cout << "Sum: " << sum << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_stdint')">▶ Run Code</button>
+                    <div class="code-output" id="output_stdint">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Single vs Double Precision -->
+        <div class="slide">
+            <h1>Single vs Double Precision</h1>
+            <p>Both <code>float</code> and <code>double</code> store decimal numbers, but with different levels of precision.</p>
+            
+            <h3>Key Differences:</h3>
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>float (Single Precision)</th>
+                    <th>double (Double Precision)</th>
+                </tr>
+                <tr>
+                    <td>Size</td>
+                    <td>4 bytes (32 bits)</td>
+                    <td>8 bytes (64 bits)</td>
+                </tr>
+                <tr>
+                    <td>Precision</td>
+                    <td>~6-7 decimal digits</td>
+                    <td>~15-16 decimal digits</td>
+                </tr>
+                <tr>
+                    <td>Range</td>
+                    <td>±3.4 × 10<sup>38</sup></td>
+                    <td>±1.7 × 10<sup>308</sup></td>
+                </tr>
+                <tr>
+                    <td>Best for</td>
+                    <td>Memory-constrained systems</td>
+                    <td>High-precision calculations</td>
+                </tr>
+            </table>
+
+            <h3>Example - Precision Difference:</h3>
+            <pre><code>float pi_f = 3.14159265358979;    // Stored as ~3.141593
+double pi_d = 3.14159265358979;   // Stored as ~3.14159265358979
+
+cout << pi_f << endl;  // 3.14159
+cout << pi_d << endl;  // 3.14159265358979</code></pre>
+
+            <h3>Performance on ARM Cortex-M3:</h3>
+            <p><strong>Critical:</strong> The Cortex-M3 has <strong>NO hardware FPU</strong> (Floating-Point Unit)!</p>
+            <ul>
+                <li>All float and double operations use <strong>software emulation</strong> (software FP libraries)</li>
+                <li><code>float</code> operations: ~20-40 cycles per operation (addition/multiplication)</li>
+                <li><code>double</code> operations: ~100-200+ cycles per operation (much slower!)</li>
+                <li>Integer operations: 1-2 cycles (hardware supported via ALU)</li>
+            </ul>
+
+            <div class="highlight">
+                <strong>ARM Cortex-M3 Guidance:</strong> Avoid floating-point math when possible! Use integer arithmetic (scaled integers) for time-critical code. If you must use FP, prefer <code>float</code> over <code>double</code> - it's 3-5x faster and uses half the memory.
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Float vs Double Precision</div>
+                <div class="code-practice-body">
+                    <p>See the precision difference between float and double:</p>
+                    <textarea class="code-editor" id="editor_precision">#include <iostream>
+#include <iomanip>  // For setprecision
+using namespace std;
+
+int main() {
+    float pi_f = 3.14159265358979;
+    double pi_d = 3.14159265358979;
+    
+    // Show precision differences
+    cout << setprecision(15);  // Show 15 digits
+    cout << "float  pi: " << pi_f << endl;
+    cout << "double pi: " << pi_d << endl;
+    
+    // Try some calculations
+    float area_f = pi_f * 10.0f * 10.0f;
+    double area_d = pi_d * 10.0 * 10.0;
+    
+    cout << "\nArea with float:  " << area_f << endl;
+    cout << "Area with double: " << area_d << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_precision')">▶ Run Code</button>
+                    <div class="code-output" id="output_precision">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Anatomy of a C++ Program -->
+        <div class="slide">
+            <h1>Anatomy of a C++ Program</h1>
+            <p>Every C++ program has a basic structure. Let's break it down:</p>
+            
+            <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    return 0;
+}</code></pre>
+
+            <h3>Breaking it down:</h3>
+            <ul>
+                <li><code>#include &lt;iostream&gt;</code> - Includes library for input/output operations</li>
+                <li><code>using namespace std;</code> - Allows us to use standard library functions without prefix</li>
+                <li><code>int main()</code> - The main function where program execution begins</li>
+                <li><code>{ }</code> - Curly braces define the beginning and end of a code block</li>
+                <li><code>cout</code> - Outputs text to the screen</li>
+                <li><code>endl</code> - Ends the line (newline character)</li>
+                <li><code>return 0;</code> - Indicates successful program completion</li>
+            </ul>
+            
+            <div class="highlight">
+                <strong>Remember:</strong> Every statement in C++ ends with a semicolon <code>;</code>
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Your First C++ Program</div>
+                <div class="code-practice-body">
+                    <p>Run this Hello World program, then modify it to print your name:</p>
+                    <textarea class="code-editor" id="editor0">#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    // Add another line to print your name
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('0')">▶ Run Code</button>
+                    <div class="code-output" id="output0">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Variables - Interactive -->
+        <div class="slide">
+            <h1>Variables and Declaration</h1>
+            <p>Variables must be <strong>declared</strong> before use. Declaration specifies the type and name.</p>
+            
+            <h3>Syntax:</h3>
+            <pre><code>type variableName = value;</code></pre>
+            
+            <h3>Examples:</h3>
+            <pre><code>int sensorValue = 0;
+float temperature = 25.5;
+char grade = 'A';
+bool isActive = true;</code></pre>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Declare and Print a Variable</div>
+                <div class="code-practice-body">
+                    <p>Complete the code to declare an integer variable 'count' set to 10, then print it:</p>
+                    <textarea class="code-editor" id="editor1">#include <iostream>
+using namespace std;
+
+int main() {
+    // Declare your variable here
+    
+    cout << "Count: " << count << endl;
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode(1)">▶ Run Code</button>
+                    <div class="code-output" id="output1">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Strings vs Char Arrays -->
+        <div class="slide">
+            <h1>Strings and Char Arrays</h1>
+            <p>In C++, there are two ways to work with text: <strong>C-style char arrays</strong> and <strong>C++ strings</strong></p>
+            
+            <h3>C-Style Char Arrays:</h3>
+            <pre><code>char message1[6] = "Hello";  // Must include space for '\0'
+char message2[] = "World";    // Size determined automatically
+
+// Access individual characters
+char first = message1[0];     // 'H'
+message1[0] = 'h';           // Change to "hello"</code></pre>
+            
+            <h3>C++ Strings (using string class):</h3>
+            <pre><code>#include &lt;string&gt;
+using namespace std;
+
+string greeting = "Hello";
+greeting = greeting + " World";  // Concatenation is easy!
+int length = greeting.length();   // 11</code></pre>
+
+            <h3>Key Differences:</h3>
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>Char Array</th>
+                    <th>String Class</th>
+                </tr>
+                <tr>
+                    <td>Size</td>
+                    <td>Fixed, must specify</td>
+                    <td>Dynamic, grows as needed</td>
+                </tr>
+                <tr>
+                    <td>Memory</td>
+                    <td>Less overhead</td>
+                    <td>More overhead</td>
+                </tr>
+                <tr>
+                    <td>Null terminator</td>
+                    <td>Manual ('\0')</td>
+                    <td>Automatic</td>
+                </tr>
+                <tr>
+                    <td>Best for</td>
+                    <td>Embedded systems, fixed data</td>
+                    <td>Complex text manipulation</td>
+                </tr>
+            </table>
+            
+            <div class="highlight">
+                <strong>For Embedded Systems:</strong> Char arrays are often preferred due to lower memory usage and predictable behavior.
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: C-Style Char Array</div>
+                <div class="code-practice-body">
+                    <p>Working with C-style char arrays:</p>
+                    <textarea class="code-editor" id="editor1a">#include <iostream>
+using namespace std;
+
+int main() {
+    // C-style char array
+    char message[20] = "Hello";
+    cout << "Original: " << message << endl;
+    
+    // Modify first character
+    message[0] = 'h';
+    cout << "Modified: " << message << endl;
+    
+    // Access individual character
+    cout << "First char: " << message[0] << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('1a')">▶ Run Code</button>
+                    <div class="code-output" id="output1a">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+
+            <div class="code-practice" style="margin-top: 20px;">
+                <div class="code-practice-header">🔨 Try It: C++ String Class</div>
+                <div class="code-practice-body">
+                    <p>Working with C++ string class:</p>
+                    <textarea class="code-editor" id="editor1b">#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    // C++ string class
+    string greeting = "Hello";
+    cout << "Original: " << greeting << endl;
+    
+    // Easy concatenation
+    greeting = greeting + " World";
+    cout << "Concatenated: " << greeting << endl;
+    
+    // Get length
+    cout << "Length: " << greeting.length() << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('1b')">▶ Run Code</button>
+                    <div class="code-output" id="output1b">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Basic Operators - Interactive -->
+        <div class="slide">
+            <h1>Basic Operators</h1>
+            
+            <h3>Arithmetic Operators (use int for whole numbers):</h3>
+            <pre><code>int a = 10, b = 3;
+int sum = a + b;        // 13 (integer result)
+int diff = a - b;       // 7 (integer result)
+int product = a * b;    // 30 (integer result)
+int quotient = a / b;   // 3 (integer division truncates!)
+int remainder = a % b;  // 1 (modulo only works with int)</code></pre>
+
+            <h3>With floating-point (use float/double for decimals):</h3>
+            <pre><code>float x = 10.0, y = 3.0;
+float result = x / y;   // 3.333333 (float preserves decimals)
+
+double pi = 3.14159;
+double area = pi * 5.0 * 5.0;  // 78.53975 (double for precision)</code></pre>
+
+            <h3>Choosing the right type:</h3>
+            <ul>
+                <li><strong>Use int:</strong> Counting, indexing, whole number math</li>
+                <li><strong>Use float:</strong> Sensor readings, percentages, general decimals</li>
+                <li><strong>Use double:</strong> Scientific calculations needing high precision</li>
+            </ul>
+
+            <div class="highlight">
+                <strong>Warning:</strong> Mixing int and float can cause unexpected results!<br>
+                <code>int a = 10; float b = 3.0; int c = a / b;</code> will give <code>c = 3</code> (truncated to int)
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Arithmetic Operations (int)</div>
+                <div class="code-practice-body">
+                    <p>Calculate the sum of 15 and 27 using <strong>int</strong> type, store in 'result', and print it:</p>
+                    <textarea class="code-editor" id="editor2">#include <iostream>
+using namespace std;
+
+int main() {
+    // Declare an int variable and calculate 15 + 27
+    
+    cout << "Result: " << result << endl;
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode(2)">▶ Run Code</button>
+                    <div class="code-output" id="output2">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Comparison Operators -->
+        <div class="slide">
+            <h1>Comparison Operators</h1>
+            
+            <pre><code>int a = 10, b = 3;
+
+bool result1 = (a == b);   // Equal: false
+bool result2 = (a != b);   // Not equal: true
+bool result3 = (a > b);    // Greater than: true
+bool result4 = (a < b);    // Less than: false
+bool result5 = (a >= b);   // Greater or equal: true
+bool result6 = (a <= b);   // Less or equal: false</code></pre>
+
+            <h3>Assignment Operators:</h3>
+            <pre><code>int x = 5;
+x += 3;    // x = x + 3  (x becomes 8)
+x -= 2;    // x = x - 2  (x becomes 6)
+x *= 4;    // x = x * 4  (x becomes 24)
+x /= 3;    // x = x / 3  (x becomes 8)
+
+x++;       // Increment by 1
+x--;       // Decrement by 1</code></pre>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Comparison and Assignment Operators</div>
+                <div class="code-practice-body">
+                    <p>Experiment with comparison and assignment operators:</p>
+                    <textarea class="code-editor" id="editor_operators">#include <iostream>
+using namespace std;
+
+int main() {
+    int a = 10;
+    int b = 20;
+    
+    // Comparison operators
+    cout << "a == b: " << (a == b) << endl;  // 0 (false)
+    cout << "a < b: " << (a < b) << endl;    // 1 (true)
+    cout << "a > b: " << (a > b) << endl;    // 0 (false)
+    
+    // Assignment operators
+    int x = 5;
+    cout << "\nStarting x: " << x << endl;
+    x += 3;
+    cout << "After x += 3: " << x << endl;
+    x *= 2;
+    cout << "After x *= 2: " << x << endl;
+    x++;
+    cout << "After x++: " << x << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_operators')">▶ Run Code</button>
+                    <div class="code-output" id="output_operators">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Conditional Statements (if/else) -->
+        <div class="slide">
+            <h1>Conditional Statements</h1>
+            <p>Use comparison operators to make decisions in your code with <strong>if</strong>, <strong>if-else</strong>, and <strong>if-else if-else</strong> statements.</p>
+            
+            <h3>Simple if Statement:</h3>
+            <pre><code>int temperature = 75;
+
+if (temperature > 70) {           // Check if temp is greater than 70
+    cout << "It's warm!" << endl; // Only runs if condition is true
+}                                  // If false, skip this block</code></pre>
+
+            <h3>if-else Statement:</h3>
+            <pre><code>int voltage = 3;
+
+if (voltage >= 5) {                 // Check if voltage is 5 or higher
+    cout << "System ON" << endl;    // Runs if condition is true
+} else {                            // Otherwise (voltage < 5)
+    cout << "System OFF" << endl;   // Runs if condition is false
+}</code></pre>
+
+            <h3>if-else if-else Statement:</h3>
+            <pre><code>int sensorValue = 250;
+
+if (sensorValue < 100) {            // First check: is it less than 100?
+    cout << "Low" << endl;          // Runs if < 100
+} else if (sensorValue < 200) {     // Second check: is it less than 200?
+    cout << "Medium" << endl;       // Runs if 100-199
+} else if (sensorValue < 300) {     // Third check: is it less than 300?
+    cout << "High" << endl;         // Runs if 200-299
+} else {                            // All conditions failed
+    cout << "Critical" << endl;     // Runs if >= 300
+}</code></pre>
+
+            <h3>Multiple Conditions:</h3>
+            <pre><code>int temp = 72;
+int humidity = 45;
+
+// Check multiple conditions at once (ALL must be true)
+if (temp >= 68 && temp <= 75 && humidity < 60) {
+    cout << "Comfortable conditions" << endl;  // Runs if all 3 are true
+} else {                                       // If ANY condition is false
+    cout << "Adjust environment" << endl;     // Take corrective action
+}
+
+// && means AND (all must be true), || means OR (any can be true), ! means NOT</code></pre>
+
+            <div class="highlight">
+                <strong>Tip:</strong> Always use curly braces <code>{ }</code> even for single statements to avoid bugs!
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Temperature Check</div>
+                <div class="code-practice-body">
+                    <p>Write an if-else statement to check if temperature is within safe range (20-30):</p>
+                    <textarea class="code-editor" id="editor2b">#include <iostream>
+using namespace std;
+
+int main() {
+    int temperature = 25;
+    
+    // Write your if-else statement here
+    // If temp is between 20 and 30, print "Safe"
+    // Otherwise print "Warning"
+    
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('2b')">▶ Run Code</button>
+                    <div class="code-output" id="output2b">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Arrays -->
+        <div class="slide">
+            <h1>Arrays</h1>
+            <p>Arrays store multiple values of the <strong>same type</strong> in consecutive memory locations.</p>
+            
+            <h3>Declaring Arrays:</h3>
+            <pre><code>int temperatures[7];              // Array of 7 integers (UNINITIALIZED - DANGEROUS!)
+int values[5] = {10, 20, 30, 40, 50};  // Initialize with values (SAFE)
+float voltages[] = {3.3, 5.0, 12.0};   // Size determined automatically (3)</code></pre>
+
+            <h3>⚠️ Why Uninitialized Arrays Are Dangerous:</h3>
+            <pre><code>int data[5];                // UNINITIALIZED - contains random garbage!
+cout << data[0];            // Could print 0, 42847629, or anything!
+
+int safe[5] = {0};          // GOOD: Initialize all to 0
+int safe2[5] = {1,2,3,4,5}; // GOOD: Initialize all values</code></pre>
+            <p><strong>Problem:</strong> Uninitialized arrays contain whatever random data was in that memory location. This causes unpredictable behavior and hard-to-find bugs!</p>
+
+            <h3>Accessing Array Elements:</h3>
+            <pre><code>int sensors[4] = {100, 200, 300, 400};
+
+int first = sensors[0];     // 100 (indices start at 0!)
+int second = sensors[1];    // 200
+sensors[2] = 350;          // Change third element to 350
+
+// sensors[4] would be OUT OF BOUNDS - undefined behavior!</code></pre>
+
+            <h3>⚠️ Out-of-Bounds Access - CRITICAL DANGER:</h3>
+            <pre><code>int myArray[3] = {10, 20, 30};
+myArray[5] = 99;  // OUT OF BOUNDS! Writing to unknown memory!</code></pre>
+            <p><strong>What can happen:</strong></p>
+            <ul>
+                <li>Corrupt other variables in your program</li>
+                <li>Crash your microcontroller (hard fault)</li>
+                <li>Overwrite critical system data</li>
+                <li>Work fine during testing, fail in production</li>
+                <li>Create security vulnerabilities</li>
+            </ul>
+
+            <h3>Array Size:</h3>
+            <pre><code>int data[10];
+int arraySize = sizeof(data) / sizeof(data[0]);  // 10</code></pre>
+
+            <div class="highlight">
+                <strong>Critical Rules:</strong><br>
+                1. ALWAYS initialize arrays before use!<br>
+                2. Array indices: 0 to N-1 (for array of size N)<br>
+                3. Accessing out-of-bounds = undefined behavior = BAD!<br>
+                4. In embedded systems, these bugs can be catastrophic!
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Initialize and Access an Array</div>
+                <div class="code-practice-body">
+                    <p>Create an array of 5 sensor readings and print the third element (index 2):</p>
+                    <textarea class="code-editor" id="editor2c">#include <iostream>
+using namespace std;
+
+int main() {
+    // Create an array called 'sensors' with values: 100, 150, 200, 250, 300
+    
+    
+    // Print the third element (index 2)
+    cout << "Third sensor: " << sensors[2] << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('2c')">▶ Run Code</button>
+                    <div class="code-output" id="output2c">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: For Loops - Interactive -->
+        <div class="slide">
+            <h1>For Loops</h1>
+            <p>For loops repeat a block of code a specific number of times.</p>
+            
+            <h3>Syntax:</h3>
+            <pre><code>for (initialization; condition; increment) {
+    // Code to repeat
+}</code></pre>
+
+            <h3>Example:</h3>
+            <pre><code>for (int i = 0; i < 5; i++) {
+    // Runs 5 times: i = 0, 1, 2, 3, 4
+}</code></pre>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Create a For Loop</div>
+                <div class="code-practice-body">
+                    <p>Write a for loop that prints numbers from 1 to 5:</p>
+                    <textarea class="code-editor" id="editor3">#include <iostream>
+using namespace std;
+
+int main() {
+    // Write your for loop here
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode(3)">▶ Run Code</button>
+                    <div class="code-output" id="output3">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: For Loops with Arrays -->
+        <div class="slide">
+            <h1>For Loops with Arrays</h1>
+            <p>For loops are perfect for iterating through arrays to process each element.</p>
+            
+            <h3>Basic Array Iteration:</h3>
+            <pre><code>int data[5] = {10, 20, 30, 40, 50};
+
+// Print all elements
+for (int i = 0; i < 5; i++) {
+    cout << "Element " << i << ": " << data[i] << endl;
+}</code></pre>
+
+            <h3>Example 1: Sum All Elements</h3>
+            <pre><code>int numbers[6] = {5, 10, 15, 20, 25, 30};
+int sum = 0;
+
+for (int i = 0; i < 6; i++) {    // Loop through each element
+    sum += numbers[i];            // Add each element to sum
+}
+
+cout << "Sum: " << sum << endl;  // Output: Sum: 105</code></pre>
+
+            <h3>Example 2: Find Minimum Value</h3>
+            <pre><code>int values[5] = {42, 17, 88, 9, 55};
+int minValue = values[0];         // Start with first element
+
+for (int i = 1; i < 5; i++) {    // Start from index 1
+    if (values[i] < minValue) {   // If current is smaller
+        minValue = values[i];     // Update minimum
+    }
+}
+
+cout << "Min: " << minValue << endl;  // Output: Min: 9</code></pre>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Sum Array Elements</div>
+                <div class="code-practice-body">
+                    <p>Complete the code to sum all elements in the array:</p>
+                    <textarea class="code-editor" id="editor3b">#include <iostream>
+using namespace std;
+
+int main() {
+    int temps[4] = {72, 68, 75, 70};
+    int total = 0;
+    
+    // Write a for loop to sum all elements
+    
+    
+    cout << "Total: " << total << endl;
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('3b')">▶ Run Code</button>
+                    <div class="code-output" id="output3b">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: While Loops - Interactive -->
+        <div class="slide">
+            <h1>While Loops</h1>
+            <p>While loops repeat as long as a condition is true.</p>
+            
+            <h3>Syntax:</h3>
+            <pre><code>while (condition) {
+    // Code to repeat
+}</code></pre>
+
+            <h3>Example:</h3>
+            <pre><code>int count = 0;
+while (count < 5) {
+    count++;
+}</code></pre>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Create a While Loop</div>
+                <div class="code-practice-body">
+                    <p>Write a while loop that prints numbers from 1 to 5:</p>
+                    <textarea class="code-editor" id="editor4">#include <iostream>
+using namespace std;
+
+int main() {
+    // Write your while loop here
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode(4)">▶ Run Code</button>
+                    <div class="code-output" id="output4">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Functions Basics -->
+        <div class="slide">
+            <h1>Functions</h1>
+            <p>Functions are reusable blocks of code that perform a specific task.</p>
+            
+            <h3>Syntax:</h3>
+            <pre><code>returnType functionName(parameters) {
+    // Function body
+    return value;
+}</code></pre>
+
+            <h3>Example without return:</h3>
+            <pre><code>void printMessage() {
+    cout << "Hello!" << endl;
+}</code></pre>
+
+            <h3>Example with parameters and return:</h3>
+            <pre><code>int add(int a, int b) {
+    return a + b;
+}
+
+int result = add(5, 3);  // result = 8</code></pre>
+
+            <h3>Variable Scope:</h3>
+            <pre><code>int globalVar = 100;        // Visible everywhere
+
+void myFunction() {
+    int localVar = 50;      // Only visible inside myFunction
+    cout << globalVar;      // OK: can access global
+    cout << localVar;       // OK: can access local
+}
+
+int main() {
+    cout << globalVar;      // OK: can access global
+    cout << localVar;       // ERROR: localVar not visible here!
+    return 0;
+}</code></pre>
+
+            <div class="highlight">
+                <strong>Key Point:</strong> Variables declared inside a function are <strong>local</strong> - they only exist within that function. They're created when the function is called and destroyed when it returns.
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Create a Simple Function</div>
+                <div class="code-practice-body">
+                    <p>Complete the function to greet a user, then call it from main:</p>
+                    <textarea class="code-editor" id="editor_func_basics">#include <iostream>
+using namespace std;
+
+// Complete this function
+void greet() {
+    cout << "Hello from the function!" << endl;
+}
+
+// Create a function that returns the square of a number
+int square(int num) {
+    return num * num;
+}
+
+int main() {
+    greet();  // Call the greet function
+    
+    int result = square(5);
+    cout << "Square of 5: " << result << endl;
+    
+    // Try calling square with different values
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_func_basics')">▶ Run Code</button>
+                    <div class="code-output" id="output_func_basics">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Function Parameters -->
+        <div class="slide">
+            <h1>Function Parameters: Pass by Value</h1>
+            <p>Understanding how data is passed to functions is critical for embedded systems.</p>
+            
+            <h3>Pass by Value (Default):</h3>
+            <pre><code>void modifyValue(int x) {
+    x = 100;                   // Changes local copy only
+}
+
+int main() {
+    int num = 5;
+    modifyValue(num);          // Pass copy of num
+    cout << num;               // Still 5! Original unchanged
+    return 0;
+}</code></pre>
+
+            <h3>Pass by Reference (with &):</h3>
+            <pre><code>void modifyValue(int& x) {     // Note the &
+    x = 100;                   // Changes original!
+}
+
+int main() {
+    int num = 5;
+    modifyValue(num);          // Pass reference to num
+    cout << num;               // Now 100! Original changed
+    return 0;
+}</code></pre>
+
+            <h3>⚠️ Why Not Pass Large Objects by Value?</h3>
+            <pre><code>// BAD for embedded systems - copies entire array!
+void processArray(int data[1000]) {  // Actually passes pointer, but...
+    // ...
+}
+
+// BETTER - pass by reference (pointer)
+void processArray(int* data, int size) {
+    // No copying, just pass memory address
+}</code></pre>
+
+            <div class="highlight">
+                <strong>Embedded Systems Rule:</strong> Passing by value creates a COPY - wastes memory and time! For arrays, structs, or large data:<br>
+                • Use pointers or references<br>
+                • Saves RAM (critical on microcontrollers)<br>
+                • Saves CPU cycles (no copying)<br>
+                • But be careful - you can now modify the original!
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Pass by Value vs Reference</div>
+                <div class="code-practice-body">
+                    <p>See the difference between pass by value and pass by reference:</p>
+                    <textarea class="code-editor" id="editor4b">#include <iostream>
+using namespace std;
+
+void modifyByValue(int x) {
+    x = 100;
+    cout << "Inside modifyByValue: " << x << endl;
+}
+
+void modifyByReference(int& x) {
+    x = 100;
+    cout << "Inside modifyByReference: " << x << endl;
+}
+
+int main() {
+    int num1 = 5;
+    int num2 = 5;
+    
+    modifyByValue(num1);
+    cout << "After modifyByValue: " << num1 << endl;
+    
+    modifyByReference(num2);
+    cout << "After modifyByReference: " << num2 << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('4b')">▶ Run Code</button>
+                    <div class="code-output" id="output4b">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: Function Declarations -->
+        <div class="slide">
+            <h1>Function Declarations and Visibility</h1>
+            <p>Functions must be declared before they can be used. Two approaches:</p>
+            
+            <h3>Approach 1: Define Before Use</h3>
+            <pre><code>// Define function first
+int multiply(int a, int b) {
+    return a * b;
+}
+
+int main() {
+    int result = multiply(5, 3);  // OK: multiply is already defined
+    return 0;
+}</code></pre>
+
+            <h3>Approach 2: Forward Declaration (Prototype)</h3>
+            <pre><code>// Declare function signature at top (prototype)
+int multiply(int a, int b);
+
+int main() {
+    int result = multiply(5, 3);  // OK: compiler knows multiply exists
+    return 0;
+}
+
+// Define function later
+int multiply(int a, int b) {
+    return a * b;
+}</code></pre>
+
+            <h3>Best Practice for Embedded Systems:</h3>
+            <pre><code>#include <iostream>
+using namespace std;
+
+// Forward declarations at top
+void initSensors();
+int readTemperature();
+void processData(int* data, int size);
+
+int main() {
+    initSensors();
+    int temp = readTemperature();
+    // ...
+    return 0;
+}
+
+// Function definitions below
+void initSensors() {
+    // Initialization code
+}
+
+int readTemperature() {
+    return 25;  // Simplified
+}</code></pre>
+
+            <div class="highlight">
+                <strong>Why Forward Declarations?</strong><br>
+                • Keep main() at top for readability<br>
+                • Functions can call each other<br>
+                • Organize code better (common in embedded projects)<br>
+                • Required when functions call each other recursively
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Forward Declarations</div>
+                <div class="code-practice-body">
+                    <p>Practice using forward declarations to organize your code:</p>
+                    <textarea class="code-editor" id="editor_forward">#include <iostream>
+using namespace std;
+
+// Forward declarations
+int add(int a, int b);
+int multiply(int a, int b);
+int calculate(int x, int y);
+
+int main() {
+    int result1 = add(5, 3);
+    int result2 = multiply(4, 6);
+    int result3 = calculate(10, 2);
+    
+    cout << "Add: " << result1 << endl;
+    cout << "Multiply: " << result2 << endl;
+    cout << "Calculate: " << result3 << endl;
+    
+    return 0;
+}
+
+// Function definitions
+int add(int a, int b) {
+    return a + b;
+}
+
+int multiply(int a, int b) {
+    return a * b;
+}
+
+int calculate(int x, int y) {
+    return add(x, y) * multiply(x, y);  // Functions can call each other!
+}</textarea>
+                    <button class="run-button" onclick="runCode('_forward')">▶ Run Code</button>
+                    <div class="code-output" id="output_forward">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19: Function Examples - Interactive -->
+        <div class="slide">
+            <h1>More Function Examples</h1>
+            
+            <h3>Example: Convert Celsius to Fahrenheit</h3>
+            <pre><code>float celsiusToFahrenheit(float celsius) {
+    return (celsius * 9.0 / 5.0) + 32.0;
+}
+
+float temp = celsiusToFahrenheit(25.0);  // 77.0</code></pre>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Create a Function</div>
+                <div class="code-practice-body">
+                    <p>Create a function called 'multiply' that takes two ints and returns their product. Then call it:</p>
+                    <textarea class="code-editor" id="editor5">#include <iostream>
+using namespace std;
+
+// Write your function here
+
+
+int main() {
+    int result = multiply(6, 7);
+    cout << "6 x 7 = " << result << endl;
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode(5)">▶ Run Code</button>
+                    <div class="code-output" id="output5">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Putting It All Together -->
+        <div class="slide">
+            <h1>Putting It All Together</h1>
+            <p>A complete example combining everything we've learned:</p>
+            
+            <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+// Function to calculate average
+float calculateAverage(int values[], int size) {
+    int sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum += values[i];
+    }
+    return (float)sum / size;
+}
+
+int main() {
+    int sensorData[5] = {20, 25, 22, 28, 23};
+    
+    // Calculate average
+    float avg = calculateAverage(sensorData, 5);
+    cout << "Average: " << avg << endl;
+    
+    // Check if in acceptable range
+    if (avg >= 20.0 && avg <= 30.0) {
+        cout << "System OK" << endl;
+    }
+    
+    return 0;
+}</code></pre>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Complete Sensor System</div>
+                <div class="code-practice-body">
+                    <p>Modify the complete example: add a function to find the maximum sensor reading:</p>
+                    <textarea class="code-editor" id="editor_complete">#include <iostream>
+using namespace std;
+
+float calculateAverage(int values[], int size) {
+    int sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum += values[i];
+    }
+    return (float)sum / size;
+}
+
+// Add a function here to find the maximum value
+int findMax(int values[], int size) {
+    int maxVal = values[0];
+    for (int i = 1; i < size; i++) {
+        if (values[i] > maxVal) {
+            maxVal = values[i];
+        }
+    }
+    return maxVal;
+}
+
+int main() {
+    int sensorData[5] = {20, 25, 22, 28, 23};
+    
+    float avg = calculateAverage(sensorData, 5);
+    int maxVal = findMax(sensorData, 5);
+    
+    cout << "Average: " << avg << endl;
+    cout << "Maximum: " << maxVal << endl;
+    
+    if (avg >= 20.0 && avg <= 30.0) {
+        cout << "System OK" << endl;
+    } else {
+        cout << "Warning: Check system" << endl;
+    }
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_complete')">▶ Run Code</button>
+                    <div class="code-output" id="output_complete">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: Practice Challenge -->
+        <div class="slide">
+            <h1>Final Challenge</h1>
+            <p>Put all your skills together!</p>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🎯 Challenge: Temperature Monitor</div>
+                <div class="code-practice-body">
+                    <p>Create a function that:</p>
+                    <ul>
+                        <li>Takes a temperature value (int)</li>
+                        <li>Returns true if temp is between 20 and 30 (inclusive)</li>
+                        <li>Name it: isTemperatureNormal</li>
+                        <li>Test it with values 25, 15, and 32</li>
+                    </ul>
+                    <textarea class="code-editor" id="editor6">#include <iostream>
+using namespace std;
+
+// Write your function here
+
+
+int main() {
+    cout << "25°C is normal: " << isTemperatureNormal(25) << endl;
+    cout << "15°C is normal: " << isTemperatureNormal(15) << endl;
+    cout << "32°C is normal: " << isTemperatureNormal(32) << endl;
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode(6)">▶ Run Code</button>
+                    <div class="code-output" id="output6">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Introduction to Pointers -->
+        <div class="slide">
+            <h1>Introduction to Pointers</h1>
+            <p>A <strong>pointer</strong> is a variable that stores the <strong>memory address</strong> of another variable.</p>
+            
+            <h3>Why Pointers Matter in Embedded Systems:</h3>
+            <ul>
+                <li>Direct hardware access (memory-mapped I/O)</li>
+                <li>Efficient array and data structure manipulation</li>
+                <li>Dynamic memory management</li>
+                <li>Passing large data without copying</li>
+            </ul>
+
+            <h3>Pointer Syntax:</h3>
+            <pre><code>int x = 42;          // Regular integer variable
+int* ptr = &x;       // Pointer to an integer
+
+// Read this as: "ptr is a pointer to an int"
+// The & operator gets the address of x</code></pre>
+
+            <h3>Two Key Operators:</h3>
+            <pre><code>int value = 10;
+int* ptr = &value;   // & = "address-of" operator
+
+cout << ptr;         // Prints the memory address (e.g., 0x7fff5fbff8ac)
+cout << *ptr;        // * = "dereference" - gets value at address (10)</code></pre>
+
+            <div class="highlight">
+                <strong>Key Concept:</strong> A pointer is itself an object (takes memory), but it <strong>points to</strong> another object. Think of it like a street address that tells you where a house is located.
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Your First Pointer</div>
+                <div class="code-practice-body">
+                    <p>Create a pointer and see how the & and * operators work:</p>
+                    <textarea class="code-editor" id="editor_ptr_intro">#include <iostream>
+using namespace std;
+
+int main() {
+    int score = 100;
+    int* ptr = &score;  // ptr stores the address of score
+    
+    cout << "Value of score: " << score << endl;
+    cout << "Address of score: " << &score << endl;
+    cout << "Value of ptr (address): " << ptr << endl;
+    cout << "Value at ptr (*ptr): " << *ptr << endl;
+    
+    // Modify through pointer
+    *ptr = 200;
+    cout << "\nAfter *ptr = 200:" << endl;
+    cout << "Value of score: " << score << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_ptr_intro')">▶ Run Code</button>
+                    <div class="code-output" id="output_ptr_intro">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23: Pointers and Memory Addresses -->
+        <div class="slide">
+            <h1>Pointers and Memory Addresses</h1>
+            <p>Understanding pointer values, memory locations, and dereferencing.</p>
+            
+            <h3>Complete Pointer Anatomy:</h3>
+            <pre><code>int num = 100;
+int* ptr = &num;
+
+// Print everything about the pointer
+cout << "Value of num: " << num << endl;           // 100
+cout << "Address of num: " << &num << endl;        // 0x7fff5fbff8ac (example)
+cout << "Value of ptr: " << ptr << endl;           // 0x7fff5fbff8ac (same!)
+cout << "Address of ptr: " << &ptr << endl;        // 0x7fff5fbff8b0 (different!)
+cout << "Value at ptr: " << *ptr << endl;          // 100</code></pre>
+
+            <h3>Visual Representation:</h3>
+            <pre><code>Memory:     Address:        Variable:    Value:
+            0x...8ac        num          100
+            0x...8b0        ptr          0x...8ac (points to num!)</code></pre>
+
+            <h3>Key Points:</h3>
+            <ul>
+                <li><code>num</code> stores the value 100</li>
+                <li><code>ptr</code> stores the address of num (where num lives in memory)</li>
+                <li><code>*ptr</code> accesses the value that ptr points to (100)</li>
+                <li>Both <code>num</code> and <code>ptr</code> have their own addresses in memory!</li>
+            </ul>
+
+            <div class="highlight">
+                <strong>Important:</strong> The pointer itself occupies memory (typically 4 or 8 bytes on most systems). It's a variable that happens to store an address as its value.
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Explore Memory Addresses</div>
+                <div class="code-practice-body">
+                    <p>See all the different addresses and values:</p>
+                    <textarea class="code-editor" id="editor_ptr_mem">#include <iostream>
+using namespace std;
+
+int main() {
+    int num = 42;
+    int* ptr = &num;
+    
+    cout << "Value of num: " << num << endl;
+    cout << "Address of num (&num): " << &num << endl;
+    cout << "\nValue of ptr (holds address): " << ptr << endl;
+    cout << "Address of ptr itself (&ptr): " << &ptr << endl;
+    cout << "Value ptr points to (*ptr): " << *ptr << endl;
+    
+    // Change value through pointer
+    *ptr = 100;
+    cout << "\nAfter *ptr = 100:" << endl;
+    cout << "num is now: " << num << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_ptr_mem')">▶ Run Code</button>
+                    <div class="code-output" id="output_ptr_mem">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24: Pointers with Different Data Types -->
+        <div class="slide">
+            <h1>Pointers with Different Data Types</h1>
+            <p>Pointers can point to any data type. The type matters for correct memory access!</p>
+            
+            <h3>Examples with Various Types:</h3>
+            <pre><code>// Integer pointer
+int num = 42;
+int* pNum = &num;
+cout << "int value: " << *pNum << endl;        // 42
+cout << "int address: " << pNum << endl;       // 0x7fff...
+
+// Float pointer
+float temp = 98.6;
+float* pTemp = &temp;
+cout << "float value: " << *pTemp << endl;     // 98.6
+cout << "float address: " << pTemp << endl;    // 0x7fff...
+
+// Character pointer
+char grade = 'A';
+char* pGrade = &grade;
+cout << "char value: " << *pGrade << endl;     // A
+cout << "char address: " << (void*)pGrade << endl; // Need (void*) to print address
+
+// Bool pointer
+bool flag = true;
+bool* pFlag = &flag;
+cout << "bool value: " << *pFlag << endl;      // 1 (true)
+cout << "bool address: " << pFlag << endl;     // 0x7fff...</code></pre>
+
+            <h3>⚠️ Type Safety Matters:</h3>
+            <pre><code>int x = 100;
+float* wrongPtr = (float*)&x;  // Type mismatch! Dangerous!
+cout << *wrongPtr;              // Garbage - interprets int bytes as float!</code></pre>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Explore Pointers</div>
+                <div class="code-practice-body">
+                    <p>Create variables and pointers, then print their values and addresses:</p>
+                    <textarea class="code-editor" id="editor4a">#include <iostream>
+using namespace std;
+
+int main() {
+    int myAge = 25;
+    int* pAge = &myAge;
+    
+    cout << "Value of myAge: " << myAge << endl;
+    cout << "Address of myAge: " << &myAge << endl;
+    cout << "Value stored in pAge: " << pAge << endl;
+    cout << "Value pointed to by pAge: " << *pAge << endl;
+    
+    // Try modifying through the pointer
+    *pAge = 26;
+    cout << "\nAfter *pAge = 26:" << endl;
+    cout << "myAge is now: " << myAge << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('4a')">▶ Run Code</button>
+                    <div class="code-output" id="output4a">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 25: Pointers and Arrays -->
+        <div class="slide">
+            <h1>Pointers and Arrays</h1>
+            <p>In C++, arrays and pointers are closely related. An array name is actually a pointer to its first element!</p>
+            
+            <h3>Array Name as Pointer:</h3>
+            <pre><code>int arr[5] = {10, 20, 30, 40, 50};
+
+// These are equivalent!
+cout << arr;        // Address of first element: 0x7fff...
+cout << &arr[0];    // Same address!
+
+// Array name is a pointer to first element
+int* ptr = arr;     // No & needed! arr already is an address
+cout << *ptr;       // 10 (value at first element)</code></pre>
+
+            <h3>Pointer Arithmetic:</h3>
+            <pre><code>int arr[5] = {10, 20, 30, 40, 50};
+int* ptr = arr;
+
+cout << *ptr;       // 10 (arr[0])
+cout << *(ptr+1);   // 20 (arr[1])
+cout << *(ptr+2);   // 30 (arr[2])
+
+// ptr+1 doesn't just add 1 byte!
+// It adds sizeof(int) bytes (usually 4)
+// So ptr+1 points to the next int in the array</code></pre>
+
+            <h3>Relationship Diagram:</h3>
+            <pre><code>arr[0]  arr[1]  arr[2]  arr[3]  arr[4]
+  10      20      30      40      50
+  ↑
+  ptr (points here)
+  
+ptr+0 = &arr[0] = address of arr[0]
+ptr+1 = &arr[1] = address of arr[1]
+ptr+2 = &arr[2] = address of arr[2]</code></pre>
+
+            <div class="highlight">
+                <strong>Critical for Embedded Systems:</strong> Understanding the array-pointer relationship is essential for:<br>
+                • Passing arrays to functions efficiently<br>
+                • Working with hardware buffers<br>
+                • Memory-mapped peripheral access<br>
+                • DMA (Direct Memory Access) operations
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Pointers and Arrays</div>
+                <div class="code-practice-body">
+                    <p>Experiment with array-pointer relationships and pointer arithmetic:</p>
+                    <textarea class="code-editor" id="editor_ptr_arr">#include <iostream>
+using namespace std;
+
+int main() {
+    int data[5] = {10, 20, 30, 40, 50};
+    int* ptr = data;  // ptr points to first element
+    
+    cout << "Array name (address): " << data << endl;
+    cout << "Address of first element: " << &data[0] << endl;
+    cout << "Pointer value: " << ptr << endl;
+    cout << "All point to same location!\n" << endl;
+    
+    // Access elements using pointer arithmetic
+    cout << "*ptr (data[0]): " << *ptr << endl;
+    cout << "*(ptr+1) (data[1]): " << *(ptr+1) << endl;
+    cout << "*(ptr+2) (data[2]): " << *(ptr+2) << endl;
+    
+    // Modify through pointer
+    *(ptr+1) = 99;
+    cout << "\nAfter *(ptr+1) = 99:" << endl;
+    cout << "data[1] is now: " << data[1] << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_ptr_arr')">▶ Run Code</button>
+                    <div class="code-output" id="output_ptr_arr">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 26: Array Iteration - Indexing vs Pointers -->
+        <div class="slide">
+            <h1>Array Iteration: Indexing vs Pointers</h1>
+            <p>There are two ways to iterate through arrays: traditional indexing and pointer arithmetic.</p>
+            
+            <h3>Method 1: Array Indexing (Traditional):</h3>
+            <pre><code>int data[5] = {10, 20, 30, 40, 50};
+
+// Using index
+for (int i = 0; i < 5; i++) {
+    cout << data[i] << " ";
+}
+// Output: 10 20 30 40 50</code></pre>
+
+            <h3>Method 2: Pointer Arithmetic:</h3>
+            <pre><code>int data[5] = {10, 20, 30, 40, 50};
+int* ptr = data;
+
+// Using pointer
+for (int i = 0; i < 5; i++) {
+    cout << *(ptr + i) << " ";  // Or: cout << *ptr++;
+}
+// Output: 10 20 30 40 50</code></pre>
+
+            <h3>Method 3: Pointer Increment:</h3>
+            <pre><code>int data[5] = {10, 20, 30, 40, 50};
+int* ptr = data;
+int* end = data + 5;  // Pointer to one past the end
+
+while (ptr < end) {
+    cout << *ptr << " ";
+    ptr++;  // Move to next element
+}
+// Output: 10 20 30 40 50</code></pre>
+
+            <h3>Which Method to Use?</h3>
+            <table>
+                <tr>
+                    <th>Method</th>
+                    <th>Pros</th>
+                    <th>Cons</th>
+                    <th>Best For</th>
+                </tr>
+                <tr>
+                    <td>Array Indexing</td>
+                    <td>Clear, readable, safe bounds</td>
+                    <td>Slightly slower (index calculation)</td>
+                    <td>General use, beginners</td>
+                </tr>
+                <tr>
+                    <td>Pointer Arithmetic</td>
+                    <td>Faster, more flexible</td>
+                    <td>Easy to make mistakes, less readable</td>
+                    <td>Performance-critical code</td>
+                </tr>
+            </table>
+
+            <div class="highlight">
+                <strong>Embedded Systems Note:</strong> Pointer arithmetic can be faster, but modern compilers often optimize array indexing to the same machine code. Use indexing for clarity unless profiling shows a bottleneck!
+            </div>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Array Indexing Method</div>
+                <div class="code-practice-body">
+                    <p>Using traditional array indexing to iterate:</p>
+                    <textarea class="code-editor" id="editor_iteration1">#include <iostream>
+using namespace std;
+
+int main() {
+    int temps[6] = {20, 22, 25, 23, 21, 24};
+    
+    // Method 1: Array indexing
+    cout << "Using array indexing: ";
+    for (int i = 0; i < 6; i++) {
+        cout << temps[i] << " ";
+    }
+    cout << endl;
+    
+    // Calculate average using indexing
+    int sum = 0;
+    for (int i = 0; i < 6; i++) {
+        sum += temps[i];
+    }
+    float average = sum / 6.0;
+    cout << "Average temperature: " << average << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_iteration1')">▶ Run Code</button>
+                    <div class="code-output" id="output_iteration1">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+
+            <div class="code-practice" style="margin-top: 20px;">
+                <div class="code-practice-header">🔨 Try It: Pointer Arithmetic Methods</div>
+                <div class="code-practice-body">
+                    <p>Using pointers to iterate through the array:</p>
+                    <textarea class="code-editor" id="editor_iteration2">#include <iostream>
+using namespace std;
+
+int main() {
+    int temps[6] = {20, 22, 25, 23, 21, 24};
+    
+    // Method 2: Pointer arithmetic with index
+    cout << "Using pointer arithmetic: ";
+    int* ptr = temps;
+    for (int i = 0; i < 6; i++) {
+        cout << *(ptr + i) << " ";
+    }
+    cout << endl;
+    
+    // Method 3: Pointer increment
+    cout << "Using pointer increment: ";
+    ptr = temps;  // Reset pointer
+    int* end = temps + 6;
+    while (ptr < end) {
+        cout << *ptr << " ";
+        ptr++;
+    }
+    cout << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_iteration2')">▶ Run Code</button>
+                    <div class="code-output" id="output_iteration2">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 27: Structs and Memory Layout -->
+        <div class="slide">
+            <h1>Structs and Memory Layout</h1>
+            <p>A <strong>struct</strong> (structure) groups related variables of different types into a single unit.</p>
+            
+            <h3>Why Structs Matter in Embedded Systems:</h3>
+            <ul>
+                <li>Organize related data (sensor readings, hardware registers)</li>
+                <li>Model real-world objects (temperature sensor with value, timestamp, status)</li>
+                <li>Memory-mapped hardware access (peripheral registers)</li>
+                <li>Efficient data passing (one struct instead of many parameters)</li>
+            </ul>
+
+            <h3>Defining a Struct:</h3>
+            <pre><code>struct SensorData {
+    uint8_t id;           // 1 byte - sensor identifier
+    uint16_t reading;     // 2 bytes - sensor value
+    float temperature;    // 4 bytes - temperature in Celsius
+    bool isActive;        // 1 byte - sensor status
+    uint32_t timestamp;   // 4 bytes - time of reading
+};</code></pre>
+
+            <h3>Memory Layout and Alignment:</h3>
+            <pre><code>// What you might expect: 1+2+4+1+4 = 12 bytes
+// What you actually get: More! (due to padding)
+
+SensorData sensor;
+cout << "Size of struct: " << sizeof(sensor) << " bytes" << endl;
+// Typically 16 bytes, not 12!</code></pre>
+
+            <h3>Why Padding Exists:</h3>
+            <p>CPUs access memory more efficiently when data is <strong>aligned</strong> to addresses that are multiples of their size:</p>
+            <pre><code>Memory Layout (with padding shown as --):
+Offset  Field          Size   Value (example)
+0       id             1      [0x42]
+1       --padding--    1      [--]
+2       reading        2      [0x00FF]
+4       temperature    4      [0x41C80000]
+8       isActive       1      [0x01]
+9       --padding--    3      [-- -- --]
+12      timestamp      4      [0x00001234]
+Total: 16 bytes</code></pre>
+
+            <div class="highlight">
+                <strong>Key Insight:</strong> The compiler adds padding bytes to ensure each field starts at an address that's a multiple of its size. This makes memory access faster but wastes space!
+            </div>
+
+            <h3>Using Pointers to Explore Memory:</h3>
+            <pre><code>SensorData sensor = {1, 1024, 25.5, true, 1000000};
+SensorData* ptr = &sensor;
+
+// Access through pointer
+ptr->id = 2;                    // Same as (*ptr).id = 2
+cout << ptr->temperature;       // Access member through pointer
+
+// Show memory addresses of each field
+cout << "Struct address: " << ptr << endl;
+cout << "id address: " << (void*)&(ptr->id) << endl;
+cout << "reading address: " << (void*)&(ptr->reading) << endl;
+cout << "temperature address: " << (void*)&(ptr->temperature) << endl;</code></pre>
+
+            <div class="code-practice">
+                <div class="code-practice-header">🔨 Try It: Explore Struct Memory Layout</div>
+                <div class="code-practice-body">
+                    <p>Create a struct and explore how data is organized in memory:</p>
+                    <textarea class="code-editor" id="editor_struct">#include <iostream>
+#include <stdint.h>
+using namespace std;
+
+struct SensorData {
+    uint8_t id;           // 1 byte
+    uint16_t reading;     // 2 bytes
+    float temperature;    // 4 bytes
+    bool isActive;        // 1 byte
+    uint32_t timestamp;   // 4 bytes
+};
+
+int main() {
+    SensorData sensor = {42, 1024, 25.5, true, 1000000};
+    SensorData* ptr = &sensor;
+    
+    // Show struct size
+    cout << "Size of struct: " << sizeof(sensor) << " bytes" << endl;
+    cout << "Expected (no padding): " << (1+2+4+1+4) << " bytes\n" << endl;
+    
+    // Access values through pointer
+    cout << "Sensor ID: " << (int)ptr->id << endl;
+    cout << "Reading: " << ptr->reading << endl;
+    cout << "Temperature: " << ptr->temperature << endl;
+    cout << "Active: " << ptr->isActive << endl;
+    cout << "Timestamp: " << ptr->timestamp << endl;
+    
+    // Show memory addresses (reveals padding)
+    cout << "\nMemory addresses (in hex):" << endl;
+    cout << "Struct starts at: " << ptr << endl;
+    cout << "id at offset: " << (void*)&(ptr->id) << endl;
+    cout << "reading at offset: " << (void*)&(ptr->reading) << endl;
+    cout << "temperature at offset: " << (void*)&(ptr->temperature) << endl;
+    cout << "isActive at offset: " << (void*)&(ptr->isActive) << endl;
+    cout << "timestamp at offset: " << (void*)&(ptr->timestamp) << endl;
+    
+    // Modify through pointer
+    ptr->temperature = 30.0;
+    cout << "\nUpdated temperature: " << sensor.temperature << endl;
+    
+    return 0;
+}</textarea>
+                    <button class="run-button" onclick="runCode('_struct')">▶ Run Code</button>
+                    <div class="code-output" id="output_struct">Click "Run Code" to compile and execute...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('slideNumber').textContent = `${currentSlide + 1} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // Wandbox API integration
+        async function runCode(editorNum) {
+            const editor = document.getElementById(`editor${editorNum}`);
+            const output = document.getElementById(`output${editorNum}`);
+            const button = event.target;
+            
+            const code = editor.value;
+            
+            // Disable button and show loading
+            button.disabled = true;
+            output.innerHTML = '<span class="loading">⏳ Compiling and running...</span>';
+            
+            try {
+                const response = await fetch('https://wandbox.org/api/compile.json', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        compiler: 'gcc-head',
+                        code: code,
+                        options: 'warning,cpp-no-pedantic,cpp-standard=c++11',
+                        stdin: '',
+                        'compiler-option-raw': '-std=c++11',
+                        'runtime-option-raw': ''
+                    })
+                });
+                
+                const result = await response.json();
+                
+                // Display results
+                let outputText = '';
+                
+                if (result.status === '0') {
+                    // Successful compilation and execution
+                    outputText = '<span class="success">✓ Compilation successful!</span>\n\n';
+                    if (result.program_output) {
+                        outputText += '<strong>Output:</strong>\n' + result.program_output;
+                    } else {
+                        outputText += '<em>Program ran successfully (no output)</em>';
+                    }
+                } else {
+                    // Compilation or runtime error
+                    outputText = '<span class="error">✗ Error occurred:</span>\n\n';
+                    if (result.compiler_error) {
+                        outputText += '<strong>Compiler Error:</strong>\n' + result.compiler_error;
+                    }
+                    if (result.program_error) {
+                        outputText += '\n<strong>Runtime Error:</strong>\n' + result.program_error;
+                    }
+                }
+                
+                output.innerHTML = outputText;
+                
+            } catch (error) {
+                output.innerHTML = '<span class="error">✗ Network error: Could not connect to compiler.\n\nPlease check your internet connection.</span>';
+                console.error('Error:', error);
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
