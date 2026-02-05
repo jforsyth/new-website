@@ -34,17 +34,6 @@ ninja.data = [{
             window.open("https://coin-research-group.github.io/blog/2025/xray-mal/", "_blank");
           
         },
-      },{id: "post-coin-identification-with-deep-metric-learning",
-        
-          title: 'Coin Identification with Deep Metric Learning <svg width="1.2rem" height="1.2rem" top=".5rem" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M17 13.5v6H5v-12h6m3-3h6v6m0-6-9 9" class="icon_svg-stroke" stroke="#999" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-        
-        description: "Jackson Greer (CS &#39;25) presents at JMU CS Research Day",
-        section: "Posts",
-        handler: () => {
-          
-            window.open("https://coin-research-group.github.io/blog/2025/jackson/", "_blank");
-          
-        },
       },{id: "post-julia-larson-presents-at-virginia-academy-of-science",
         
           title: 'Julia Larson Presents at Virginia Academy of Science <svg width="1.2rem" height="1.2rem" top=".5rem" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M17 13.5v6H5v-12h6m3-3h6v6m0-6-9 9" class="icon_svg-stroke" stroke="#999" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
@@ -54,6 +43,17 @@ ninja.data = [{
         handler: () => {
           
             window.open("https://jmu-wearable-computing.github.io/blog/2025/spring2025/", "_blank");
+          
+        },
+      },{id: "post-coin-identification-with-deep-metric-learning",
+        
+          title: 'Coin Identification with Deep Metric Learning <svg width="1.2rem" height="1.2rem" top=".5rem" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M17 13.5v6H5v-12h6m3-3h6v6m0-6-9 9" class="icon_svg-stroke" stroke="#999" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
+        
+        description: "Jackson Greer (CS &#39;25) presents at JMU CS Research Day",
+        section: "Posts",
+        handler: () => {
+          
+            window.open("https://coin-research-group.github.io/blog/2025/jackson/", "_blank");
           
         },
       },{id: "post-tenure",
